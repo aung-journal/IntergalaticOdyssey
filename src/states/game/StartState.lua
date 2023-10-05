@@ -84,17 +84,17 @@ function StartState:update(dt)
         -- switch to another state via one of the menu options
         if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
             if self.currentMenuItem == 1 then      
+                -- handle "Play" menu option
                 -- tween, using Timer, the transition rect's alpha to 1, then
                 -- transition to the BeginGame state after the animation is over
                 Timer.tween(1, {
                     [self] = {transitionAlpha = 1}
                 }):finish(function()
-                    gStateMachine:change('begin-game', {
+                    gStateMachine:change('begin-play', {
                         level = 1
                     })
 
-                    -- remove color timer from Timer
-                    self.colorTimer:remove()
+                    --self.colorTimer:remove()
                 end)
             elseif self.currentMenuItem == 2 then
                 Timer.tween(1, {
@@ -103,23 +103,96 @@ function StartState:update(dt)
                     gStateMachine:change('instructions', {
                         transitionAlpha = self.transitionAlpha
                     })
+
+                    self.colorTimer:remove()
                 end)
             elseif self.currentMenuItem == 3 then
                 Timer.tween(1, {
                     [self] = {transitionAlpha = 1}
                 }):finish(function ()
                     gStateMachine:change('setting')
+
+                    self.colorTimer:remove()
                 end)
+
             elseif self.currentMenuItem == #self.menu then
                 love.event.quit()
             end
 
             --turn off input during transition
-            --self.pauseInput = true
+            self.pauseInput = true
+        end
+
+        --this for mouse logic of checking things
+        -- check if the mouse is inside any of the menu options
+        for i, option in ipairs(self.menu) do
+            local optionX = VIRTUAL_WIDTH / 2 - gFonts['medium']:getWidth(option) / 2
+            local optionY = 16 + 12 + (i - 1) * 16
+
+            local mouseX, mouseY = push:toGame(love.mouse.getPosition())
+
+            if mouseX and mouseY then
+                if mouseX >= optionX and mouseX <= optionX + gFonts['medium']:getWidth(option) and
+                mouseY >= optionY and mouseY <= optionY + gFonts['medium']:getHeight() then
+                    self.currentMenuItemMouse = i
+                    break
+                else
+                    self.currentMenuItemMouse = 0
+                end
+            end
+        end
+
+        -- switch to another state via mouse click
+        if love.mouse.isDown(1) then
+            if self.currentMenuItemMouse == 1 then
+                -- handle "Play" menu option
+                -- tween, using Timer, the transition rect's alpha to 1, then
+                -- transition to the BeginGame state after the animation is over
+                Timer.tween(1, {
+                    [self] = {transitionAlpha = 1}
+                }):finish(function()
+                    gStateMachine:change('begin-play', {
+                        level = 1
+                    })
+
+                    --self.colorTimer:remove()
+                end)
+            elseif self.currentMenuItemMouse == 2 then
+                -- handle "Instructions" menu option
+                Timer.tween(1, {
+                    [self] = {transitionAlpha = 1}
+                }):finish(function ()
+                    gStateMachine:change('instructions', {
+                        transitionAlpha = self.transitionAlpha
+                    })
+
+                    self.colorTimer:remove()
+                end)
+            elseif self.currentMenuItemMouse == 3 then
+                -- handle "Settings" menu option
+                Timer.tween(1, {
+                    [self] = {transitionAlpha = 1}
+                }):finish(function ()
+                    gStateMachine:change('setting')
+
+                    self.colorTimer:remove()
+                end)
+            elseif self.currentMenuItemMouse == 4 then
+                -- handle "Achievements" menu option
+            elseif self.currentMenuItemMouse == 5 then
+                -- handle "Exit" menu option
+                love.event.quit()
+            end
+
+            self.pauseInput = true
         end
     end
     --update our timer, which will be used for our fade transition
     Timer.update(dt)
+
+    -- if self.currentMenuItem == 1 or self.currentMenuItemMouse == 1 then
+    --     self.colorTimer:remove()
+    -- end
 end
 
 function StartState:render()
@@ -137,6 +210,9 @@ function StartState:render()
     -- draw our transition rect; is normally fully transparent, unless we're moving to a new state
     love.graphics.setColor(1, 1, 1, self.transitionAlpha)
     love.graphics.rectangle('fill', 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+    --additional utilities
+    love.graphics.setColor(1, 1, 1, 1 - self.transitionAlpha)
+    love.graphics.draw(gTextures['setting'], 16, 0)
     love.graphics.setColor(1, 1, 1, 1)
 end
 

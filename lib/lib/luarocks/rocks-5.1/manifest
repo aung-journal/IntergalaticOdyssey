@@ -1,0 +1,37 @@
+commands = {}
+dependencies = {
+   ["lua-mp"] = {
+      ["scm-1"] = {
+         {
+            constraints = {
+               {
+                  op = ">=",
+                  version = {
+                     5, 1, string = "5.1"
+                  }
+               }
+            },
+            name = "lua"
+         }
+      }
+   }
+}
+modules = {
+   mp = {
+      "lua-mp/scm-1"
+   }
+}
+repository = {
+   ["lua-mp"] = {
+      ["scm-1"] = {
+         {
+            arch = "installed",
+            commands = {},
+            dependencies = {},
+            modules = {
+               mp = "mp.so"
+            }
+         }
+      }
+   }
+}

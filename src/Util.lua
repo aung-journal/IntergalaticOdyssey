@@ -118,10 +118,30 @@ end
 
 --game code functionalities for setting
 
-function MouseCollides(object)
+function MouseCollides(object, Mousex, Mousey)
     return not (object.x > Mousex + Mousewidth or Mousex > object.x + object.width or
     object.y > Mousey + Mouseheight or Mousey > object.y + object.height)
 end
+
+function MouseCollidesXY(x, y, width, height, Mousex, Mousey)
+    return not (x > Mousex + Mousewidth or Mousex > x + width or
+    y > Mousey + Mouseheight or Mousey > y + height)
+end
+
+-- --this is for default tweening
+-- function TweenAlpha(func, state, alpha, interval)
+--     if not state then
+--         Timer.tween(interval or 1, {
+            
+--         }):finish()
+--     else
+--         Timer.tween(interval or 1, {
+--             [state] = {alpha = alpha - 1}
+--         }):finish(
+--             gStateMachine:change(state, )
+--         )
+--     end
+-- end
 
 --This is for gSounds['music'] volume changing
 function increaseVolume()

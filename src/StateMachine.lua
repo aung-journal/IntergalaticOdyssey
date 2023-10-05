@@ -5,7 +5,8 @@ function StateMachine:init(states)
         render = function() end,
         update = function() end,
         enter = function() end,
-        exit = function() end
+        exit = function() end,
+        init = function() end,
     }
     self.states = states or {} -- [name] -> [function that returns states]
     self.current = self.empty
@@ -39,4 +40,19 @@ end
 
 function StateMachine:getCurrentStateName()
     return self.currentStateName
+end
+
+function StateMachine:getStateAttributes(stateName)
+    assert(self.states[stateName]) -- state must exist!
+    
+    local state = self.states[stateName]()
+    local attributes = {}
+    
+    for key, value in pairs(state) do
+        if type(value) ~= "function" then
+            attributes[key] = value
+        end
+    end
+    
+    return attributes
 end

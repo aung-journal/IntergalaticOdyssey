@@ -38,9 +38,7 @@ function PauseState:update(dt)
             Timer.tween(1, {
                 [self] = {transitionAlpha = 1}
             }):finish(function ()
-                gStateMachine:change(tostring(self.previousState), {
-                    score = 0
-                })                
+                gStateMachine:change(tostring(self.previousState), gStateMachine:getStateAttributes(tostring(self.previousState)), true)                
             end)
         elseif highlighted == 3 then
             Timer.tween(1, {
@@ -76,9 +74,9 @@ function PauseState:render()
     for i = 1, maxOptions do
         local optionIndex = i + scrollOffset
 
-        if i == 2 and self.previousState == 'setting' then --this is not rendering restart in pause state
-            goto continue
-        end
+        -- if i == 2 and self.previousState == 'setting' then --this is not rendering restart in pause state
+        --     goto continue
+        -- end
 
         if highlighted == i then
             love.graphics.setColor(103/255, 1, 1, 1 - self.transitionAlpha)
@@ -93,6 +91,6 @@ function PauseState:render()
 
         love.graphics.setColor(1, 1, 1, 1)
 
-        ::continue::
+        --::continue::
     end
 end

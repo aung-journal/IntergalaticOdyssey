@@ -7,13 +7,17 @@ function BeginGameState:init()
 end
 
 function BeginGameState:enter(def)
-    self.level = def.level
+    --self.level = def.level
 
-    Timer.tween(1, {
+    Timer.tween(2, {
         [self] = {transitionAlpha = 0}
     })
     :finish(function ()
-        gStateMachine:change('play')
+        Timer.tween(1, {
+            [self] = {transitionAlpha = 1}
+        }):finish(function ()
+            gStateMachine:change('start')
+        end)
     end)
 end
 
@@ -22,5 +26,6 @@ function BeginGameState:update(dt)
 end
 
 function BeginGameState:render()
-    love.graphics.draw(gTextures['background'], 16, 0)
+    love.graphics.setColor(1,1,1, 1 - self.transitionAlpha)
+    love.graphics.draw(gTextures['logo'], 16, 0)
 end

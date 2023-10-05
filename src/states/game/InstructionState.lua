@@ -136,6 +136,9 @@ function InstructionState:render()
     love.graphics.printf(currentInstruction.text, 0 + self.offset, headingHeight + 10, textWidth, "left")
     --self:drawEditShadow(currentInstruction.text, 0, headingHeight + 10, "left")
     --rendering instructions end
+
+    --additional utilities
+    love.graphics.draw(gTextures['setting'], 0, 0)
 end
 
 --[[
