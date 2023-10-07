@@ -1,0 +1,1 @@
+SlimeIdleState = Class{__includes = BaseState}

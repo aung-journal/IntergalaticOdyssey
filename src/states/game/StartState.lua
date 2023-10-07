@@ -90,7 +90,7 @@ function StartState:update(dt)
                 Timer.tween(1, {
                     [self] = {transitionAlpha = 1}
                 }):finish(function()
-                    gStateMachine:change('begin-play', {
+                    gStateMachine:change('play', {
                         level = 1
                     })
 
@@ -104,7 +104,7 @@ function StartState:update(dt)
                         transitionAlpha = self.transitionAlpha
                     })
 
-                    self.colorTimer:remove()
+                    -- self.colorTimer:remove()
                 end)
             elseif self.currentMenuItem == 3 then
                 Timer.tween(1, {
@@ -112,7 +112,7 @@ function StartState:update(dt)
                 }):finish(function ()
                     gStateMachine:change('setting')
 
-                    self.colorTimer:remove()
+                    -- self.colorTimer:remove()
                 end)
 
             elseif self.currentMenuItem == #self.menu then
@@ -166,7 +166,7 @@ function StartState:update(dt)
                         transitionAlpha = self.transitionAlpha
                     })
 
-                    self.colorTimer:remove()
+                    -- self.colorTimer:remove()
                 end)
             elseif self.currentMenuItemMouse == 3 then
                 -- handle "Settings" menu option
@@ -175,7 +175,7 @@ function StartState:update(dt)
                 }):finish(function ()
                     gStateMachine:change('setting')
 
-                    self.colorTimer:remove()
+                    -- self.colorTimer:remove()
                 end)
             elseif self.currentMenuItemMouse == 4 then
                 -- handle "Achievements" menu option

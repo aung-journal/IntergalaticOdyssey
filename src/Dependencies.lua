@@ -20,10 +20,22 @@ require 'src/states/game/PauseState'
 require 'src/states/game/InstructionState'
 require 'src/states/game/SettingState'
 
+--entity states
+--player
+require 'src/states/entity/PlayerFallingState'
+require 'src/states/entity/PlayerIdleState'
+require 'src/states/entity/PlayerJumpState'
+require 'src/states/entity/PlayerWalkingState'
+--slime
+require 'src/states/entity/slime/SlimeIdleState'
+require 'src/states/entity/slime/SlimeMovingState'
+require 'src/states/entity/slime/SlimeChasingState'
+
 --general
 require 'src/Animation'
 require 'src/Entity'
 require 'src/GameObject'
+require 'src/GameLevel'
 --mouse control
 require 'src/Mouse'
 --levelMaker
@@ -33,6 +45,7 @@ require 'src/Tile'
 require 'src/TileMap'
 --mobs and characters
 require 'src/Player'
+require 'src/Slime'
 
 gSounds = {
     ['selection'] = love.audio.newSource('sounds/selection.wav', 'static'),
@@ -52,13 +65,29 @@ gTextures = {
     ['setting'] = love.graphics.newImage('graphics/setting.png'),
     ['logo'] = love.graphics.newImage('graphics/logo22.png'),
     ['player'] = love.graphics.newImage('graphics/blue_alien(player).png'),
-
-    ['slimes'] = love.graphics.newImage('graphics/slimes.png')
+    --mobs
+    ['slimes'] = love.graphics.newImage('graphics/slimes.png'),
+    ['recruit1'] = love.graphics.newImage('graphics/recruit1.png'),
+    --plains and GameObjects
+    ['plains'] = love.graphics.newImage('graphics/backgrounds.png'),
+    ['tiles'] = love.graphics.newImage('graphics/tiles.png'),
+    ['toppers'] = love.graphics.newImage('graphics/tile_tops.png'),
 }
 
 gFrames = {
-    ['slimes'] = GenerateQuads(gTextures['slimes'], 80, 48)
+    --characters & mobs
+    ['player'] = GenerateQuads(gTextures['player'], 16, 20),
+    ['slimes'] = GenerateQuads(gTextures['slimes'], 80, 48),
+    ['recruit1'] = GenerateQuads(gTextures['recruit1'], 18, 32),
+    --plains and GameObjects
+    ['plains'] = GenerateQuads(gTextures['plains'], 256, 128),
+    ['tiles'] = GenerateQuads(gTextures['tiles'], TILE_SIZE, TILE_SIZE),
+    ['toppers'] = GenerateQuads(gTextures['toppers'], TILE_SIZE, TILE_SIZE)
 }
+
+--these needed to be added after gFrames is initialized because they refer to gFrames from within
+gFrames['tilesets'] = GenerateTileSets(gFrames['tiles'], TILE_SET_WIDE, TILEL_SET_TALL, TILE_SET_WIDTH, TILE_SET_HEIGHT)
+gFrames['toppersets'] = GenerateTileSets(gFrames['toppers'], TOPPER_SET_WIDE, TOPPER_SET_TALL, TILE_SET_WIDTH, TILE_SET_HEIGHT)
 
 gFonts = {
     ['small'] = love.graphics.newFont('fonts/font.ttf', 4),
@@ -73,3 +102,6 @@ MUSIC = true
 MOUSE = true
 ZOOM = 1
 MOUSE_ZOOM = false
+
+--game dependencies
+PLAINS = #gFrames['plains']

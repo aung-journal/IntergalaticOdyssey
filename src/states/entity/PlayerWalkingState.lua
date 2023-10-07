@@ -1,0 +1,1 @@
+PlayerWalkingState = Class{__includes = BaseState}

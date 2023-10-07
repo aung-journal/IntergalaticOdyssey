@@ -1,0 +1,1 @@
+SlimeChasingState = Class{__includes = BaseState}

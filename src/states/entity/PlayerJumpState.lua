@@ -1,0 +1,1 @@
+PlayerJumpState = Class{__includes = BaseState}

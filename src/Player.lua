@@ -14,13 +14,60 @@ function Player:render()
 end
 
 function Player:checkLeftCollisions(dt)
+    --check for two tiles collision
+    local tileTopLeft = self.map:pointToTile(self.x + 1, self.y + 1)
+    local tileBottomLeft = self.map:pointToTile(self.x + 1, self.y + self.height - 1)
+    --has 1 pixel margin
 
+    --this is for making player not moveable if collision occurs
+    if (tileTopLeft and tileBottomLeft) and (tileTopLeft:collidable() or tileBottomLeft:collidable()) then
+        self.x = (tileTopLeft.x - 1) * TILE_SIZE + tileTopLeft.width - 1
+    else
+        --allow us to walk atop solid objects even if we collide with them
+        self.y = self.y - 1
+        local collidedObjects = self:checkObjectCollisons()
+
+        --reset X if new collided object
+        if #collidedObjects > 0 then
+            self.x = self.x + PLAYER_WALK_SPEED * dt
+        end
+    end
 end
 
 function Player:checkRightCollisions(dt)
+    --check for right two tiles collision
+    local tileTopRight = self.map:pointToTile(self.x + self.width - 1, self.y + 1)
+    local tileBottomRight = self.map:pointToTile(self.x + self.width - 1, self.y + self.height - 1)
+    --has 1 pixel margin
 
+    --this is for making player not moveable if collision occurs
+    if (tileTopRight and tileBottomRight) and (tileTopRight:collidable() or tileBottomRight:collidable()) then
+        self.x = (tileTopRight.x - 1) * TILE_SIZE - self.width
+    else
+        --allow us to walk atop solid objects even if we collide with them
+        self.y = self.y - 1
+        local collidedObjects = self:checkObjectCollisons()
+
+        --reset X if new collided object
+        if #collidedObjects > 0 then
+            self.x = self.x + PLAYER_WALK_SPEED * dt
+        end
+    end
 end
 
 function Player:checkObjectCollisons()
+    local collidedObjects = {}
 
+    for k, object in pairs(self.level.objects) do
+        if object:collides(self) then
+            if object.solid then
+                table.insert(collidedObjects, object)
+            elseif object.consumable then
+                object.onConsume(self)
+                table.remove(self.level.objects, k)
+            end
+        end
+    end
+
+    return collidedObjects
 end

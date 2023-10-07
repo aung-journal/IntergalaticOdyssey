@@ -1,0 +1,1 @@
+SlimeMovingState = Class{__includes = BaseState}
